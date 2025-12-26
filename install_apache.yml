@@ -1,19 +1,41 @@
 ---
 
-- hosts: minty
+- hosts: all
   become: true
   tasks:
 
   - name: update repo index
     apt:
       update_cache: yes
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
 
   - name: install apache2 package
     apt:
       name: apache2
       state: latest
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
 
   - name: add php support for apache
     apt:
       name: libapache2-mod-php
       state: latest
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint"]
+
+
+
+  - name: update repo index
+    dnf:
+      update_cache: yes
+    when: ansible_distribution in ["RedHat"]
+
+  - name: install httpd package
+    dnf:
+      name: httpd
+      state: latest
+    when: ansible_distribution in ["RedHat"]
+
+  - name: add php support for apache
+    dnf:
+      name: php
+      state: latest
+    when: ansible_distribution in ["RedHat"]
