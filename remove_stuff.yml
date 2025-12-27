@@ -1,0 +1,26 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Define variables
+    set_fact:
+      apache_package: "{{ 'apache2' if ansible_distribution == 'Linux Mint' or ansible_os_family == 'Debian' else 'httpd' }}"
+      php_package: "{{ 'libapache2-mod-php' if ansible_distribution == 'Linux Mint' or ansible_os_family == 'Debian' else 'php' }}"
+
+  - name: update repo index
+    package:
+      update_cache: yes
+
+  - name: uninstall apache package
+    package:
+      name: "{{ apache_package }}"
+      state: absent
+    when: inventory_hostname != "rhelweb9"
+
+  - name: uninstall php support for apache
+    package:
+      name: "{{ php_package }}"
+      state: absent
+    when: inventory_hostname != "rhelweb9"
