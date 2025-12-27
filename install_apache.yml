@@ -15,3 +15,12 @@
         - "{{ php_package }}"
       state: latest
       update_cache: yes
+
+  - name: Start httpd on rhel10-t1
+    tags: apache,rhel,httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when:
+      - inventory_hostname == "rhel10-t1"
